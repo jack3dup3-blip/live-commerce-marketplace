@@ -20,11 +20,21 @@ export async function signInAction(_state: SignInState, formData: FormData): Pro
     return { error: "Email and password are required." };
   }
 
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { role: true, sellerProfile: { select: { id: true } } }
+  });
+  const redirectTo = user?.role === UserRole.ADMIN
+    ? "/admin"
+    : user?.role === UserRole.SELLER && user.sellerProfile
+      ? "/seller/dashboard"
+      : "/account";
+
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/account"
+      redirectTo
     });
   } catch (error) {
     if (error instanceof AuthError) {
