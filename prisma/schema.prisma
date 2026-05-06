@@ -200,6 +200,9 @@ model Auction {
   bidIncrement   Decimal       @default(1) @db.Decimal(10, 2)
   startsAt       DateTime
   endsAt         DateTime
+  closedAt       DateTime?
+  winningBidId   String?       @unique
+  settlementOrderId String?    @unique
   bids           Bid[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt

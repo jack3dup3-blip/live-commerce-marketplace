@@ -106,6 +106,16 @@ Buy Now listings use Stripe Checkout in test mode only. Required environment var
 
 The webhook fulfills `checkout.session.completed` and `checkout.session.async_payment_succeeded` events by creating `Order` and `OrderItem` records, recording platform fee fields, and reducing listing/product inventory.
 
+## Auction System
+
+Auction listings support bid placement through `/api/auctions/[auctionId]/bids`. The server validates that the auction is active, the bid is above the current bid, the bid meets the configured increment, and the seller is not bidding on their own item. Bids in the final 30 seconds extend the auction by 30 seconds. Ended auctions can be locked from `/seller/auctions`, which creates a pending order for the winning bidder.
+
+Run bidding flow tests with:
+
+```bash
+npm run test:playwright
+```
+
 ## Database
 
 The Prisma schema includes:

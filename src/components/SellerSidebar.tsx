@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes, LayoutDashboard, ListChecks, PackageCheck, PlusCircle, Radio } from "lucide-react";
+import { Boxes, Gavel, LayoutDashboard, ListChecks, PackageCheck, PlusCircle, Radio } from "lucide-react";
 
 const links = [
   { href: "/seller/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const links = [
   { href: "/seller/products/new", label: "New product", icon: PlusCircle },
   { href: "/seller/listings", label: "Listings", icon: ListChecks },
   { href: "/seller/listings/new", label: "New listing", icon: Radio },
+  { href: "/seller/auctions", label: "Auctions", icon: Gavel },
   { href: "/seller/orders", label: "Orders", icon: PackageCheck }
 ];
 

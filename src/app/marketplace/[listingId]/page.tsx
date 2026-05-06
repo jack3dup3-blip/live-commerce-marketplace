@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Gavel, Radio, ShieldCheck, Store } from "lucide-react";
+import { BidForm } from "@/components/BidForm";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { getListingById } from "@/lib/marketplace";
 import { formatCurrency, formatDate } from "@/lib/format";
@@ -19,6 +20,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
   const liveStream = listing.liveProducts[0]?.liveStream;
   const listingTypeLabel = listing.listingType.replace("_", " ");
   const displayPrice = listing.listingType === "LIVE_ONLY" ? "Live only" : formatCurrency(listing.auction?.currentPrice?.toString() ?? listing.price.toString());
+  const minimumBid = listing.auction ? Number(listing.auction.currentPrice) + Number(listing.auction.bidIncrement) : 0;
 
   return (
     <main className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_420px] lg:px-8">
@@ -86,6 +88,12 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               <span className="font-medium text-ink">{formatCurrency(listing.auction.bidIncrement.toString())}</span>
             </div>
           ) : null}
+          {listing.auction ? (
+            <div className="flex justify-between gap-4">
+              <span className="text-black/55">Minimum bid</span>
+              <span className="font-medium text-ink">{formatCurrency(minimumBid)}</span>
+            </div>
+          ) : null}
           <div className="flex justify-between gap-4">
             <span className="text-black/55">Ends</span>
             <span className="font-medium text-ink">{listing.endsAt ? formatDate(listing.endsAt) : "Open"}</span>
@@ -110,7 +118,18 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
           <p className="mt-2 text-sm leading-6 text-black/60">{listing.sellerProfile.bio ?? "Verified marketplace seller."}</p>
         </div>
 
-        {listing.listingType === "BUY_NOW" && listing.quantity > 0 ? (
+        {listing.auction ? (
+          <div className="mt-6 rounded-lg border border-black/10 p-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lagoon">Auction detail</p>
+            <div className="mt-3 grid gap-2 text-sm text-black/60">
+              <p>Status: <span className="font-medium text-ink">{listing.auction.status.toLowerCase()}</span></p>
+              <p>Starts: <span className="font-medium text-ink">{formatDate(listing.auction.startsAt)}</span></p>
+              <p>Ends: <span className="font-medium text-ink">{formatDate(listing.auction.endsAt)}</span></p>
+              <p>Highest bid: <span className="font-medium text-ink">{listing.auction.bids[0] ? `${formatCurrency(listing.auction.bids[0].amount.toString())} by ${listing.auction.bids[0].bidder.name}` : "No bids yet"}</span></p>
+            </div>
+            {listing.auction.status === "LIVE" ? <BidForm auctionId={listing.auction.id} minimumBid={minimumBid} /> : null}
+          </div>
+        ) : listing.listingType === "BUY_NOW" && listing.quantity > 0 ? (
           <CheckoutButton listingId={listing.id} availableQuantity={listing.quantity} />
         ) : (
           <button className="mt-6 w-full rounded-md bg-ink px-4 py-3 text-sm font-semibold text-white transition hover:bg-lagoon">

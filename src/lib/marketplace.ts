@@ -22,7 +22,7 @@ export async function getListingById(listingId: string) {
   return prisma.listing.findUnique({
     where: { id: listingId },
     include: {
-      auction: { include: { bids: { orderBy: { createdAt: "desc" }, take: 5 } } },
+      auction: { include: { bids: { include: { bidder: true }, orderBy: [{ amount: "desc" }, { createdAt: "asc" }], take: 5 } } },
       sellerProfile: { include: { user: true } },
       product: {
         include: {
