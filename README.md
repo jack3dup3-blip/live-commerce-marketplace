@@ -93,7 +93,7 @@ The seller product and listing forms now persist to PostgreSQL through server ac
 - `/seller/listings/new`
 - `/seller/listings/[listingId]/edit`
 
-Products capture title, description, category, brand, condition, quantity, and image URLs. Listings can be `BUY_NOW`, `AUCTION`, or `LIVE_ONLY`; Buy Now listings require price and quantity, while Auction listings require starting price, bid increment, start time, and end time.
+Products capture title, description, category, brand, condition, quantity, and image URLs. Listings can be `BUY_NOW`, `AUCTION`, or `LIVE_ONLY`; Buy Now listings require price and quantity, while Auction listings require starting price, bid increment, start time, end time, and an optional anti-sniping setting.
 
 ## Stripe Test Checkout
 
@@ -108,7 +108,7 @@ The webhook fulfills `checkout.session.completed` and `checkout.session.async_pa
 
 ## Auction System
 
-Auction listings support bid placement through `/api/auctions/[auctionId]/bids`. The server validates that the auction is active, the bid is above the current bid, the bid meets the configured increment, and the seller is not bidding on their own item. Bids in the final 30 seconds extend the auction by 30 seconds. Ended auctions can be locked from `/seller/auctions`, which creates a pending order for the winning bidder.
+Auction listings support bid placement through `/api/auctions/[auctionId]/bids`. The server validates that the auction is active, the bid is above the current bid, the bid meets the configured increment, and the seller is not bidding on their own item. Sellers can opt into anti-sniping per auction; when enabled, bids in the final 30 seconds extend the auction by 30 seconds. Ended auctions can be locked from `/seller/auctions`, which creates a pending order for the winning bidder.
 
 Run bidding flow tests with:
 

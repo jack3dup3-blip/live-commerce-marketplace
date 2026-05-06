@@ -3,7 +3,13 @@ import { AuctionStatus, ListingStatus, ListingType, ProductCondition, UserRole }
 import { AuctionError, closeAuction, placeAuctionBid } from "../src/lib/auctions";
 import { prisma } from "../src/lib/prisma";
 
-async function createAuctionFixture({ finalSeconds = 3600 }: { finalSeconds?: number } = {}) {
+async function createAuctionFixture({
+  finalSeconds = 3600,
+  antiSnipingEnabled = false
+}: {
+  finalSeconds?: number;
+  antiSnipingEnabled?: boolean;
+} = {}) {
   const suffix = `${Date.now()}-${Math.round(Math.random() * 100000)}`;
   const [sellerUser, buyerOne, buyerTwo, category] = await Promise.all([
     prisma.user.create({
@@ -84,6 +90,7 @@ async function createAuctionFixture({ finalSeconds = 3600 }: { finalSeconds?: nu
       startingPrice: 100,
       currentPrice: 100,
       bidIncrement: 10,
+      antiSnipingEnabled,
       startsAt: new Date(Date.now() - 60_000),
       endsAt: new Date(Date.now() + finalSeconds * 1000)
     }
@@ -119,8 +126,17 @@ test("validates bids and determines highest bid server-side", async () => {
   expect(secondBid.auction.currentPrice.toString()).toBe("130");
 });
 
-test("extends auction by 30 seconds for final-window bids", async () => {
+test("keeps normal auction end time when anti-sniping is off", async () => {
   const fixture = await createAuctionFixture({ finalSeconds: 20 });
+  const originalEndsAt = fixture.auction.endsAt.getTime();
+  const result = await placeAuctionBid({ auctionId: fixture.auction.id, bidderId: fixture.buyerOne.id, amount: 110 });
+
+  expect(result.extended).toBe(false);
+  expect(result.auction.endsAt.getTime()).toBe(originalEndsAt);
+});
+
+test("extends auction by 30 seconds for opted-in final-window bids", async () => {
+  const fixture = await createAuctionFixture({ finalSeconds: 20, antiSnipingEnabled: true });
   const originalEndsAt = fixture.auction.endsAt.getTime();
   const result = await placeAuctionBid({ auctionId: fixture.auction.id, bidderId: fixture.buyerOne.id, amount: 110 });
 

@@ -23,6 +23,7 @@ export const listingFormSchema = z.object({
   status: z.enum(["DRAFT", "ACTIVE", "PAUSED"]),
   startingPrice: z.coerce.number().positive("Starting price must be positive.").optional().or(z.literal("")),
   bidIncrement: z.coerce.number().positive("Bid increment must be positive.").optional().or(z.literal("")),
+  antiSnipingEnabled: z.enum(["on"]).optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional()
 }).superRefine((value, ctx) => {

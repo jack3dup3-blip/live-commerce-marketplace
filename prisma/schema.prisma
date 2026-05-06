@@ -198,6 +198,7 @@ model Auction {
   startingPrice  Decimal       @db.Decimal(10, 2)
   currentPrice   Decimal       @db.Decimal(10, 2)
   bidIncrement   Decimal       @default(1) @db.Decimal(10, 2)
+  antiSnipingEnabled Boolean   @default(false)
   startsAt       DateTime
   endsAt         DateTime
   closedAt       DateTime?

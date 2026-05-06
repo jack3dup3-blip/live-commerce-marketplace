@@ -94,6 +94,12 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               <span className="font-medium text-ink">{formatCurrency(minimumBid)}</span>
             </div>
           ) : null}
+          {listing.auction ? (
+            <div className="flex justify-between gap-4">
+              <span className="text-black/55">Anti-sniping</span>
+              <span className="font-medium text-ink">{listing.auction.antiSnipingEnabled ? "Enabled" : "Off"}</span>
+            </div>
+          ) : null}
           <div className="flex justify-between gap-4">
             <span className="text-black/55">Ends</span>
             <span className="font-medium text-ink">{listing.endsAt ? formatDate(listing.endsAt) : "Open"}</span>
@@ -125,6 +131,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               <p>Status: <span className="font-medium text-ink">{listing.auction.status.toLowerCase()}</span></p>
               <p>Starts: <span className="font-medium text-ink">{formatDate(listing.auction.startsAt)}</span></p>
               <p>Ends: <span className="font-medium text-ink">{formatDate(listing.auction.endsAt)}</span></p>
+              <p>Anti-sniping: <span className="font-medium text-ink">{listing.auction.antiSnipingEnabled ? "extends final-window bids" : "off"}</span></p>
               <p>Highest bid: <span className="font-medium text-ink">{listing.auction.bids[0] ? `${formatCurrency(listing.auction.bids[0].amount.toString())} by ${listing.auction.bids[0].bidder.name}` : "No bids yet"}</span></p>
             </div>
             {listing.auction.status === "LIVE" ? <BidForm auctionId={listing.auction.id} minimumBid={minimumBid} /> : null}

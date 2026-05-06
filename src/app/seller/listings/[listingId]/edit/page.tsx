@@ -51,6 +51,7 @@ export default async function EditListingPage({ params }: { params: Promise<{ li
             status: listing.status === "SOLD_OUT" || listing.status === "ENDED" ? "DRAFT" : listing.status,
             startingPrice: listing.auction?.startingPrice.toString(),
             bidIncrement: listing.auction?.bidIncrement.toString(),
+            antiSnipingEnabled: listing.auction?.antiSnipingEnabled ?? false,
             startTime: listing.auction?.startsAt.toISOString() ?? listing.startsAt?.toISOString(),
             endTime: listing.auction?.endsAt.toISOString() ?? listing.endsAt?.toISOString()
           }}

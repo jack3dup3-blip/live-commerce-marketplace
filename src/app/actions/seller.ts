@@ -134,6 +134,7 @@ export async function createListingAction(_state: SellerActionState, formData: F
   );
 
   const auctionStartPrice = data.startingPrice === "" || data.startingPrice === undefined ? 0 : data.startingPrice;
+  const antiSnipingEnabled = data.antiSnipingEnabled === "on";
   const startsAt = toLocalDate(data.startTime) ?? new Date();
   const endsAt = toLocalDate(data.endTime) ?? new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
 
@@ -157,6 +158,7 @@ export async function createListingAction(_state: SellerActionState, formData: F
               startingPrice: auctionStartPrice,
               currentPrice: auctionStartPrice,
               bidIncrement: data.bidIncrement === "" || data.bidIncrement === undefined ? 1 : data.bidIncrement,
+              antiSnipingEnabled,
               startsAt,
               endsAt
             }
@@ -208,6 +210,7 @@ export async function updateListingAction(_state: SellerActionState, formData: F
 
   const auctionStartPrice = data.startingPrice === "" || data.startingPrice === undefined ? 0 : data.startingPrice;
   const listingPrice = data.price === "" || data.price === undefined ? 0 : data.price;
+  const antiSnipingEnabled = data.antiSnipingEnabled === "on";
   const startsAt = toLocalDate(data.startTime) ?? listing.startsAt ?? new Date();
   const endsAt = toLocalDate(data.endTime) ?? listing.endsAt ?? new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
 
@@ -236,6 +239,7 @@ export async function updateListingAction(_state: SellerActionState, formData: F
           startingPrice: auctionStartPrice,
           currentPrice: auctionStartPrice,
           bidIncrement: data.bidIncrement === "" || data.bidIncrement === undefined ? 1 : data.bidIncrement,
+          antiSnipingEnabled,
           startsAt,
           endsAt
         },
@@ -244,6 +248,7 @@ export async function updateListingAction(_state: SellerActionState, formData: F
           startingPrice: auctionStartPrice,
           currentPrice: auctionStartPrice,
           bidIncrement: data.bidIncrement === "" || data.bidIncrement === undefined ? 1 : data.bidIncrement,
+          antiSnipingEnabled,
           startsAt,
           endsAt
         }

@@ -24,6 +24,7 @@ type ListingInitialValue = {
   status: "DRAFT" | "ACTIVE" | "PAUSED";
   startingPrice?: string;
   bidIncrement?: string;
+  antiSnipingEnabled?: boolean;
   startTime?: string;
   endTime?: string;
 };
@@ -137,6 +138,18 @@ export function ListingForm({ products, listing }: ListingFormProps) {
             {errors.endTime ? <p className="text-sm text-ember">{errors.endTime}</p> : null}
           </div>
         </div>
+        <label className="mt-4 flex items-start gap-3 rounded-md border border-black/10 bg-white p-3 text-sm text-black/65">
+          <input
+            name="antiSnipingEnabled"
+            type="checkbox"
+            defaultChecked={listing?.antiSnipingEnabled ?? false}
+            className="mt-1 h-4 w-4 rounded border-black/20 text-lagoon focus:ring-lagoon/30"
+          />
+          <span>
+            <span className="block font-semibold text-ink">Enable anti-sniping</span>
+            Extend the auction by 30 seconds when a bid lands in the final 30 seconds.
+          </span>
+        </label>
       </div>
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-black/55">Buy Now needs price and quantity. Auction needs price, increment, and timing. Live only appears in live commerce inventory.</p>

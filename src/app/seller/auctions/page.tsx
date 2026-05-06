@@ -63,6 +63,7 @@ export default async function SellerAuctionsPage() {
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-4">
                     <p className="text-sm text-black/60">
                       Increment {formatCurrency(auction.bidIncrement.toString())}
+                      {auction.antiSnipingEnabled ? " - anti-sniping on" : " - anti-sniping off"}
                       {auction.settlementOrderId ? ` - order ${auction.settlementOrderId.slice(-6).toUpperCase()}` : ""}
                     </p>
                     <form action={closeAuctionAction}>

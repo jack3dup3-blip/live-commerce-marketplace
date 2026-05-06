@@ -82,7 +82,7 @@ export async function placeAuctionBid({
       throw new AuctionError(`Bid must meet the ${increment.toFixed(2)} increment.`, "INCREMENT_NOT_MET");
     }
 
-    const extendedEndsAt = auction.endsAt.getTime() - now.getTime() <= ANTI_SNIPING_WINDOW_MS
+    const extendedEndsAt = auction.antiSnipingEnabled && auction.endsAt.getTime() - now.getTime() <= ANTI_SNIPING_WINDOW_MS
       ? new Date(auction.endsAt.getTime() + ANTI_SNIPING_EXTENSION_MS)
       : auction.endsAt;
 
